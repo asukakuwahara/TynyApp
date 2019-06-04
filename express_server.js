@@ -10,8 +10,8 @@ let urlDatabase = {
 };
 
 app.post("/urls", (req, res) => {
-  urlDatabase.shortURL = req.body.longURL;
-  console.log(urlDatabase); // Log the POST request body to the console
+  let randomURL = generateRandomString();
+  urlDatabase[randomURL] = req.body.longURL;
   res.send("Ok");         // Respond with 'Ok' (we will replace this)
 });
 
