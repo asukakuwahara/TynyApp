@@ -12,7 +12,7 @@ let urlDatabase = {
 app.post("/urls", (req, res) => {
   let randomURL = generateRandomString();
   urlDatabase[randomURL] = req.body.longURL;
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  res.redirect("urls/" + randomURL);
 });
 
 app.set("view engine", "ejs");
