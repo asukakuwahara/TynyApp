@@ -16,8 +16,9 @@
       <h3>
         <li><%= url %> -  <%= urls[url] %></li>
       </h3>
-      <form method="POST" action="/urls/9sm5xK/delete">
-        <button type="submit">DELETE</button>
+      <form method="POST" action="/urls/<%= url %>/delete">
+        <a href="/urls/<%= url %>/delete" title="Delete <%= url %>"><button type="submit">DELETE</button></a>
+
       </form>
       <% } %>
 
