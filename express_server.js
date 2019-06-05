@@ -18,7 +18,7 @@ let urlDatabase = {
 app.post("/urls/new", (req, res) => {
   let randomURL = generateRandomString();
   urlDatabase[randomURL] = req.body.longURL;
-  res.redirect(`urls/${randomURL}`);
+  res.redirect(`/urls/${randomURL}`)
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
@@ -45,7 +45,8 @@ app.post("/urls/:shortURL", (req, res) => {
 app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"]}
+    username: req.cookies["username"]
+  }
   res.render("urls_index", templateVars)
 })
 
