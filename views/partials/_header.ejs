@@ -3,9 +3,14 @@
     <header>
       <h1>Tiny App</h1>
     </header>
+    <% if(username){ %>
+    <p>User name: <%= username %></p>
+    <a href="/urls/logout/" title="Logout"><button type="submit">LOGOUT</button></a>
+    <% } else { %>
     <form class="form-inline" method="POST" action="/urls/login" >
     <input class="form-control" type="text" name="username" placeholder="type username" style="width: 300px; margin: 1em">
       <button type="submit">LOGIN</button>
   </form>
-    <p>User name: <%= username %></p>
+    <% } %>
+
   </html>

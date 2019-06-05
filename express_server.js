@@ -52,10 +52,18 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars)
 })
 
+app.get("/urls/logout", (req, res) => {
+  const name = req.cookies["username"]
+  res.clearCookie("username", name);
+  res.redirect("/urls")
+})
+
+
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = {username: req.cookies["username"]}
-  res.render("urls_new");
+  let templateVars = {
+    username: req.cookies["username"]}
+  res.render("urls_new", templateVars);
 });
 
 app.get("/urls.json", (req, res) => {
