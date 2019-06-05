@@ -12,8 +12,15 @@
 <body style="font-size:20px; padding:50px;">
   <h2><a href='/urls/b2xVn2/'>Create New Tiny URL</a></h2>
       <h1>My tiny URLs</h1>
-      <h3> <% for (let url in urls) { %>
+      <% for (let url in urls) { %>
+      <h3>
         <li><%= url %> -  <%= urls[url] %></li>
-    <% } %></h3>
+      </h3>
+      <form method="POST" action="/urls/9sm5xK/delete">
+        <button type="submit">DELETE</button>
+      </form>
+      <% } %>
+
+
 </body>
 </html>
