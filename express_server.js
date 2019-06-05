@@ -38,12 +38,15 @@ const shortURL = req.params.shortURL;
   res.redirect("/urls")
 })
 
-
+app.post("/urls/login", (req, res) => {
+  const name = req.body.username;
+  res.cookie('name', 'username', {name: name})
+  res.redirect("/urls")
+})
 
 app.get("/urls", (req, res) => {
   let templateVars = {urls: urlDatabase}
   res.render("urls_index", templateVars)
-
 })
 
 
