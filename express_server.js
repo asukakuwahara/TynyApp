@@ -1,9 +1,11 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+var cookieParser = require('cookie-parser')
 
 const app = express();
 const PORT = 8080;
 
+app.use(cookieParser())
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.set("view engine", "ejs");
