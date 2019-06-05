@@ -22,6 +22,7 @@ var findURL = shortURL => {
   }
 }
 
+
 app.post("/urls/new", (req, res) => {
   let randomURL = generateRandomString();
   urlDatabase[randomURL] = req.body.longURL;
@@ -40,17 +41,20 @@ const shortURL = req.params.shortURL;
 
 app.post("/urls/login", (req, res) => {
   const name = req.body.username;
-  res.cookie('name', 'username', {name: name})
+  res.cookie("username", name)
   res.redirect("/urls")
 })
 
 app.get("/urls", (req, res) => {
-  let templateVars = {urls: urlDatabase}
+  let templateVars = {
+    urls: urlDatabase,
+    username: req.cookies["username"]}
   res.render("urls_index", templateVars)
 })
 
 
 app.get("/urls/new", (req, res) => {
+  let templateVars = {username: req.cookies["username"]}
   res.render("urls_new");
 });
 
@@ -63,18 +67,20 @@ app.get("/", (req, res) => {
 });
 
 app.post("/urls/:shortURL", (req, res) => {
-  let templateVars = findURL(req.params.shortURL)
-
+  let templateVars = {
+    username: req.cookies["username"],
+    shortURL: req.params.shortURL,
+    longURL: urlDatabase[req.params.shortURL]}
+  templateVars.longURL = req.body.longURL;
   urlDatabase[templateVars.shortURL] = req.body.longURL
-  templateVars.longURL = req.body.longURL
 
   res.render("urls_show", templateVars)
 })
 
 app.get("/urls/:shortURL", (req, res) => {
-  const shortURL = req.params.shortURL;
-  const longURL = urlDatabase[shortURL];
-  let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]}
+  // const shortURL = req.params.shortURL;
+  // const longURL = urlDatabase[shortURL];
+  let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], username: req.cookies["username"]}
   res.render("urls_show", templateVars)
 });
 
