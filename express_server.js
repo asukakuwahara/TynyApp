@@ -22,12 +22,7 @@ app.post("/urls/new", (req, res) => {
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
-const shortURL = req.params.shortURL;
-  for(url in urlDatabase){
-    if(url === shortURL){
-      delete urlDatabase[url]
-    }
-  }
+  delete urlDatabase[req.params.shortURL];
   res.redirect("/urls")
 })
 
@@ -86,8 +81,7 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  const shortURL = req.params.shortURL;
-  const longURL = urlDatabase[shortURL];
+  const longURL = urlDatabase[req.params.shortURL];
   res.redirect(longURL);
 });
 
