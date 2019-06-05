@@ -5,11 +5,11 @@
     </header>
     <% if(username){ %>
     <p>User name: <%= username %></p>
-    <a href="/urls/logout/" title="Logout"><button type="submit">LOGOUT</button></a>
+    <a href="/urls/logout/" title="Logout"><button type="submit" style="background-color: #008CBA";>Logout</button></a>
     <% } else { %>
     <form class="form-inline" method="POST" action="/urls/login" >
-    <input class="form-control" type="text" name="username" placeholder="type username" style="width: 300px; margin: 1em">
-      <button type="submit">LOGIN</button>
+    <input class="form-control" type="text" name="username" placeholder="Type username" style="width: 300px; margin: 1em">
+    <button type="submit" style="color: white; background-color: blue; border: none; ">Login</button>
   </form>
     <% } %>
 
