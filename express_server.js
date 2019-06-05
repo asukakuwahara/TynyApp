@@ -8,7 +8,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.set("view engine", "ejs");
 
-
 let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
@@ -20,6 +19,23 @@ app.post("/urls", (req, res) => {
   res.redirect(`urls/${randomURL}`);
 });
 
+app.post("/urls/:shortURL/delete", (req, res) => {
+const shortURL = req.params.shortURL;
+  for(url in urlDatabase){
+    if(url === shortURL){
+      delete urlDatabase[url]
+    }
+  }
+  res.redirect("/urls")
+})
+
+
+app.get("/urls", (req, res) => {
+  let templateVars = {urls: urlDatabase}
+  res.render("urls_index", templateVars)
+
+})
+
 
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
@@ -29,15 +45,10 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 })
 
-app.get("/urls", (req, res) => {
-  let templateVars = {urls: urlDatabase}
-  res.render("urls_index", templateVars)
-
-})
-
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
+
 
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase}
@@ -57,5 +68,7 @@ app.listen(PORT, () => {
 function generateRandomString() {
   return Math.random().toString(36).substring(2, 8);
 }
+
+
 
 
