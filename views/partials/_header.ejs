@@ -4,13 +4,12 @@
       <h1>Tiny App</h1>
     </header>
     <% if(user){ %>
-    <p>Welcome: <%= user.email %></p>
-    <a href="/urls/logout/" title="Logout"><button type="submit" style="background-color: #008CBA";>Logout</button></a>
+    <p>Logged In As: <%= user.email %></p>
+    <a href="/urls/logout/" title="Logout">Logout</a>
 
     <%} else {%>
-    <P>"Not logged in"</P>
-        <a href="/urls/login" title="Login"><button type="submit">Login</button></a>
-        <a href="/urls/register" title="Register"><button type="submit">Register</button></a>
+        <a href="/urls/login" title="Login">Login</a><span> | </span>
+        <a href="/urls/register" title="Register">Register</a>
     <% } %>
 
   </html>
