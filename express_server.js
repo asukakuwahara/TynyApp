@@ -36,8 +36,8 @@ const emailLookup = function (email){
 }
 
 let urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": {longURL: "http://www.lighthouselabs.ca", userID: "userRandomID"},
+  "9sm5xK": {longURL: "http://www.google.com", userID: "user2RandomID"}
 };
 
 app.post("/urls/register", (req, res) =>{
@@ -61,7 +61,7 @@ app.post("/urls/register", (req, res) =>{
 
 app.post("/urls/new", (req, res) => {
   let randomURL = generateRandomString();
-  urlDatabase[randomURL] = req.body.longURL;
+  urlDatabase[randomURL] = {longURL: req.body["longURL"], userID: req.cookies["user_id"]};
   res.redirect(`/urls/${randomURL}`)
 });
 
@@ -90,10 +90,10 @@ app.post("/urls/login", (req, res) => {
 })
 
 app.post("/urls/:shortURL", (req, res) => {
-  urlDatabase[req.params.shortURL] = req.body.longURL
+  urlDatabase[req.params.shortURL].longURL = req.body.longURL
   const templateVars = {
     shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL]
+    longURL: urlDatabase[req.params.shortURL].longURL
   }
    if(req.cookies["user_id"]){
     templateVars.user = users[req.cookies["user_id"]]
