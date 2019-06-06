@@ -28,13 +28,11 @@ const getUserById = function (user_id) {
 }
 
 const emailLookup = function (email){
-  let result = false;
   for(user in users){
     if(email === users[user].email){
-      result = true;
+      return user;
     }
   }
-  return result;
 }
 
 let urlDatabase = {
@@ -45,20 +43,17 @@ let urlDatabase = {
 app.post("/urls/register", (req, res) =>{
   let email = req.body.email;
   if(!email){
-     res.status(404);
-     res.redirect("/urls/register")
+     res.status(404).send('type something at least');
   }
-  if(email && emailLookup(email) === true){
-    res.status(404);
-    res.redirect("/urls/register")
-  } else if (email && emailLookup(email) === false){
+  if(email && emailLookup(email)){
+    res.status(404).send('email already registered');
+  } else if (email && !emailLookup(email)){
     const newId = generateRandomString();
      users[newId] = {
        id: newId,
        email: email,
        password: req.body.password
      }
-     console.log(users)
      res.cookie("user_id", newId);
      res.redirect("/urls")
   }
@@ -77,9 +72,22 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 })
 
 app.post("/urls/login", (req, res) => {
-  const user = req.cookies["user_id"];
-  res.cookie("user_id", user);
-  res.redirect("/urls")
+  const password = req.body.password;
+  const email = req.body.email;
+  if (!email){
+     res.status(404);
+     res.redirect("/urls/login")
+  }
+  if (email && !emailLookup(email)){
+    res.status(403).send('email does not match any account');
+  }
+  if (email && emailLookup(email) && password !== users[emailLookup(email)].password){
+     res.status(403).send('incorrect password');
+  }
+  if (email && emailLookup(email) && password === users[emailLookup(email)].password){
+     res.cookie( "user_id", emailLookup(email));
+     res.redirect("/urls")
+  }
 })
 
 app.post("/urls/:shortURL", (req, res) => {
@@ -96,9 +104,12 @@ app.post("/urls/:shortURL", (req, res) => {
 
 app.get("/urls", (req, res) => {
   let templateVars = {
-    urls: urlDatabase}
-      if(req.cookies["user_id"]){
+    urls: urlDatabase
+  }
+  if(req.cookies["user_id"]){
     templateVars.user = users[req.cookies["user_id"]]
+  } else {
+    templateVars.user = "";
   }
   res.render("urls_index", templateVars)
 })
@@ -110,11 +121,11 @@ app.get("/urls/register", (req, res) => {
   }
   if(req.cookies["user_id"]){
     templateVars.user = users[req.cookies["user_id"]]
+  } else {
+    templateVars.user = "";
   }
   res.render("urls_register", templateVars)
 })
-
-
 
 app.get("/urls/logout", (req, res) => {
   const user_id = req.cookies["user_id"]
@@ -127,6 +138,8 @@ app.get("/urls/new", (req, res) => {
   }
     if (req.cookies["user_id"]) {
     templateVars.user = users[req.cookies["user_id"]]
+  } else {
+    templateVars.user = "";
   }
   res.render("urls_new", templateVars);
 });
