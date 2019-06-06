@@ -28,7 +28,18 @@ let urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-app.post("/urls/register", ())
+app.post("/urls/register", (req, res) =>{
+  newId = generateRandomString();
+  users[newId] = {
+    id: newId,
+    email: req.body.email,
+    password: req.body.password}
+  res.cookie("user_id", users[id]);
+
+
+  res.redirect("/urls")
+})
+
 
 app.post("/urls/new", (req, res) => {
   let randomURL = generateRandomString();
