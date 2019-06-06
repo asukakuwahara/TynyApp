@@ -29,6 +29,7 @@ let urlDatabase = {
 };
 
 app.post("/urls/register", (req, res) =>{
+  if(req.body.email){
   newId = generateRandomString();
   users[newId] = {
     id: newId,
@@ -36,6 +37,10 @@ app.post("/urls/register", (req, res) =>{
     password: req.body.password}
   res.cookie("user_id", newId);
   res.redirect("/urls")
+  } else {
+    res.send()
+    console.log("didn't work")
+  }
 })
 
 
