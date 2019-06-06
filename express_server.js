@@ -124,10 +124,9 @@ app.get("/urls/logout", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   const templateVars = {
-    email: users[req.cookies['user_id']].email,
   }
     if (req.cookies["user_id"]) {
-    templateVars.user = getUserById(req.cookies["user_id"])
+    templateVars.user = users[req.cookies["user_id"]]
   }
   res.render("urls_new", templateVars);
 });
@@ -135,6 +134,14 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 })
+
+app.get("/urls/login", (req, res) => {
+  const templateVars = {
+    user: users[req.cookies["user_id"]]
+  }
+  res.render("login_page", templateVars);
+});
+
 
 app.get("/urls/:shortURL", (req, res) => {
   const templateVars = {
