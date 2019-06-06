@@ -34,9 +34,7 @@ app.post("/urls/register", (req, res) =>{
     id: newId,
     email: req.body.email,
     password: req.body.password}
-  res.cookie("user_id", users[id]);
-
-
+  res.cookie("user_id", newId);
   res.redirect("/urls")
 })
 
