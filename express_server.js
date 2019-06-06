@@ -10,10 +10,25 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.set("view engine", "ejs");
 
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+}
+
 let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
+
+app.post("/urls/register", ())
 
 app.post("/urls/new", (req, res) => {
   let randomURL = generateRandomString();
@@ -49,6 +64,16 @@ app.get("/urls", (req, res) => {
   }
   res.render("urls_index", templateVars)
 })
+
+app.get("/urls/register", (req, res) => {
+  const templateVars = {
+    username: req.cookies["username"],
+    shortURL: req.params.shortURL,
+    longURL: urlDatabase[req.params.shortURL]}
+  res.render("urls_register", templateVars)
+})
+
+
 
 app.get("/urls/logout", (req, res) => {
   const username = req.cookies["username"]
