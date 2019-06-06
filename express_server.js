@@ -23,23 +23,38 @@ const users = {
   }
 }
 
+emailLookup = function (newEmail){
+  for(user in users){
+    if(newEmail === users[user].email){
+      return true;
+    } else {
+      return false
+    }
+   }
+}
+
 let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
 app.post("/urls/register", (req, res) =>{
-  if(req.body.email){
-  newId = generateRandomString();
-  users[newId] = {
-    id: newId,
-    email: req.body.email,
-    password: req.body.password}
-  res.cookie("user_id", newId);
-  res.redirect("/urls")
-  } else {
-    res.send()
-    console.log("didn't work")
+  let email = req.body.email;
+  if(!email){
+     res.status(404);
+     res.redirect("/urls/register")
+  }
+  if(email && emailLookup(email) === true){
+    res.status(404);
+    res.redirect("/urls/register")
+  } else if (email && emailLookup(email) === false){
+    newId = generateRandomString();
+     users[newId] = {
+       id: newId,
+       email: req.body.email,
+       password: req.body.password}
+     res.cookie("user_id", newId);
+     res.redirect("/urls")
   }
 })
 
