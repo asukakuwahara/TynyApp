@@ -88,10 +88,8 @@ app.post("/urls/:shortURL", (req, res) => {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL]
   }
-  if (req.cookies["user_id"]) {
-    templateVars.user = getUserById(req.cookies["user_id"])
-  } else {
-    templateVars.user = ""
+   if(req.cookies["user_id"]){
+    templateVars.user = users[req.cookies["user_id"]]
   }
   res.render("urls_show", templateVars)
 })
@@ -99,10 +97,8 @@ app.post("/urls/:shortURL", (req, res) => {
 app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlDatabase}
-    if (req.cookies["user_id"]) {
-    templateVars.email = users[req.cookies["user_id"]].email
-  } else {
-    templateVars.email = "";
+      if(req.cookies["user_id"]){
+    templateVars.user = users[req.cookies["user_id"]]
   }
   res.render("urls_index", templateVars)
 })
@@ -111,7 +107,9 @@ app.get("/urls/register", (req, res) => {
   const templateVars = {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
-    email: ''
+  }
+  if(req.cookies["user_id"]){
+    templateVars.user = users[req.cookies["user_id"]]
   }
   res.render("urls_register", templateVars)
 })
@@ -142,10 +140,8 @@ app.get("/urls/:shortURL", (req, res) => {
   const templateVars = {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL]}
-    if (req.cookies["user_id"]) {
-    templateVars.email = users[req.cookies["user_id"]].email
-  } else {
-    templateVars.email = "";
+    if(req.cookies["user_id"]){
+    templateVars.user = users[req.cookies["user_id"]]
   }
   res.render("urls_show", templateVars)
 });
