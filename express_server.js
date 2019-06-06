@@ -35,10 +35,27 @@ const emailLookup = function (email){
   }
 }
 
+
 let urlDatabase = {
   "b2xVn2": {longURL: "http://www.lighthouselabs.ca", userID: "userRandomID"},
   "9sm5xK": {longURL: "http://www.google.com", userID: "user2RandomID"}
 };
+
+const urlsForUser = function(id){
+  for(url in urlDatabase){
+    if(id === urlDatabase[url].userID){
+      return urlDatabase[url].longURL;
+    }
+  }
+}
+
+app.use("/urls", function(req, res, next){
+  // console.log(urlsForUser(req.cookies["user_id"]))
+  if(!urlsForUser(req.cookies["user_id"])){
+     res.status(404).send('Login to gain access');
+   }
+  next()
+})
 
 app.post("/urls/register", (req, res) =>{
   let email = req.body.email;
