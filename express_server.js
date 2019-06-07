@@ -17,8 +17,6 @@ app.set("view engine", "ejs");
 const users = {}
 const urlDatabase = {};
 
-
-
 app.post("/urls/register", (req, res) =>{
   const password = req.body.password;
   const hashedPassword = bcrypt.hashSync(password, 10);
@@ -78,25 +76,13 @@ app.post("/urls/login", (req, res) => {
   }
 })
 
-app.use("/urls/:shortURL", function(req, res, next){
-  if(!urlsForUser(req.session.user_id)){
-     res.status(404).send('Login to gain access');
-  }
-  next()
-})
 
 app.post("/urls/:shortURL", (req, res) => {
-  if(!urlsForUser(req.session.user_id)){
-     res.status(404).send('Login to gain access');
-     console.log('short one')
-  }
-  urlDatabase[req.params.shortURL].longURL = req.body.longURL
+  urlDatabase[req.params.shortURL].longURL = req.body["longURL"]
   const templateVars = {
     shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL].longURL
-  }
-   if(req.session.user_id){
-    templateVars.user = users[req.session.user_id]
+    longURL: urlDatabase[req.params.shortURL].longURL,
+    user: users[req.session.user_id]
   }
   res.render("urls_show", templateVars)
 })
@@ -168,7 +154,6 @@ app.get("/urls", (req, res) => {
 })
 
 
-
 app.get("/urls/new", (req, res) => {
   const templateVars = {
   }
@@ -182,6 +167,13 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
+})
+
+app.use("/urls/:shortURL", function(req, res, next){
+  if(!urlsForUser(req.session.user_id)){
+     res.status(404).send('Login to gain access');
+  }
+  next()
 })
 
 app.get("/urls/:shortURL", (req, res) => {
