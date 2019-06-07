@@ -160,12 +160,9 @@ app.get("/urls", (req, res) => {
 
 
 app.get("/urls/new", (req, res) => {
-  const templateVars = {
-  }
-    if (req.session.user_id) {
+  const templateVars = { user: "" }
+  if (req.session.user_id) {
     templateVars.user = users[req.session.user_id];
-  } else {
-    templateVars.user = "";
   }
   res.render("urls_new", templateVars);
 });
@@ -187,12 +184,12 @@ app.get("/urls/:shortURL", (req, res) => {
     longURL: urlDatabase[req.params.shortURL].longURL
     }
     if (req.session.user_id) {
-    templateVars.user = users[req.session.user_id];
-    res.render("urls_show", templateVars);
-  } else {
-    templateVars.user = "";
-    res.render("urls_invalidUser", templateVars);
-  }
+      templateVars.user = users[req.session.user_id];
+      res.render("urls_show", templateVars);
+    } else {
+      templateVars.user = "";
+      res.render("urls_invalidUser", templateVars);
+    }
 });
 
 app.use("/u/:shortURL", function(req, res, next){
@@ -200,7 +197,7 @@ app.use("/u/:shortURL", function(req, res, next){
     const templateVars ={
       user: ""
     }
-    res.render("urls_invalidUser", templateVars);
+  res.render("urls_invalidUser", templateVars);
   }
   next()
 })
