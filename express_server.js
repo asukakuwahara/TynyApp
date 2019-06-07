@@ -8,23 +8,23 @@ const PORT = 8080;
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieSession({
-  name: 'session',
+  name: 'user_id',
   keys: ['secretkey'],
 }))
 
 app.set("view engine", "ejs");
 
 const users = {
-  "userRandomID": {
-    id: "userRandomID",
-    email: "user@example.com",
-    password: "purple-monkey-dinosaur"
-  },
- "user2RandomID": {
-    id: "user2RandomID",
-    email: "user2@example.com",
-    password: "dishwasher-funk"
-  }
+ //  "userRandomID": {
+ //    id: "userRandomID",
+ //    email: "user@example.com",
+ //    // password: "purple-monkey-dinosaur"
+ //  },
+ // "user2RandomID": {
+ //    id: "user2RandomID",
+ //    email: "user2@example.com",
+ //    // password: "dishwasher-funk"
+ //  }
 }
 
 const getUserById = function (user_id) {
@@ -40,8 +40,8 @@ const emailLookup = function (email){
 }
 
 let urlDatabase = {
-  "b2xVn2": {longURL: "http://www.lighthouselabs.ca", userID: "userRandomID"},
-  "9sm5xK": {longURL: "http://www.google.com", userID: "user2RandomID"}
+  // "b2xVn2": {longURL: "http://www.lighthouselabs.ca", userID: "userRandomID"},
+  // "9sm5xK": {longURL: "http://www.google.com", userID: "user2RandomID"}
 };
 
 const urlsForUser = function(id){
@@ -147,7 +147,25 @@ app.get("/urls/login", (req, res) => {
   res.render("login_page", templateVars);
 });
 
+app.get("/urls/logout", (req, res) => {
+  const user_id = req.session.user_id;
+  res.clearCookie("user_id", user_id);
+  res.redirect("/urls")
+})
+
+app.use("/urls", function(req, res, next){
+  if(!req.session.user_id){
+    const templateVars ={
+      user: ""
+    }
+    res.render("urls_invalidUser", templateVars)
+  }
+  next()
+})
+
 app.get("/urls", (req, res) => {
+  if(req.session.user_id){
+  }
   let templateVars = {
     urls: urlDatabase
   }
@@ -159,18 +177,7 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars)
 })
 
-app.use("/urls", function(req, res, next){
-  if(!urlsForUser(req.session.user_id)){
-    res.redirect("/urls/login")
-  }
-  next()
-})
 
-app.get("/urls/logout", (req, res) => {
-  const user_id = req.session.user_id
-  res.session = null;
-  res.redirect("/urls")
-})
 
 app.get("/urls/new", (req, res) => {
   const templateVars = {
