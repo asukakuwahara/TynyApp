@@ -65,8 +65,7 @@ app.post("/urls/login", (req, res) => {
   const typedpassword = req.body.password;
   const email = req.body.email;
   if (!email){
-    res.status(404);
-    res.redirect("/urls/login");
+    res.status(403).send('Type something at least!');
   }
   if (email && !emailLookup(email)){
     res.status(403).send('email does not match any account');
@@ -96,13 +95,13 @@ app.get("/", (req, res) => {
   const templateVars = {
     urls: urlDatabase,
     shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL]
+    longURL: urlDatabase[req.params.shortURL],
+    user: ""
   }
   if (req.session.user_id) {
     templateVars.user = users[req.session.user_id];
     res.render("urls_index", templateVars);
   } else {
-    templateVars.user = "";
     res.render("urls_invalidUser", templateVars);
   }
 })
@@ -110,12 +109,11 @@ app.get("/", (req, res) => {
 app.get("/urls/register", (req, res) => {
   const templateVars = {
     shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL]
+    longURL: urlDatabase[req.params.shortURL],
+    user: ""
   }
   if(req.session.user_id) {
     templateVars.user = users[req.session.user_id];
-  } else {
-    templateVars.user = "";
   }
   res.render("urls_register", templateVars)
 })
@@ -145,22 +143,21 @@ app.use("/urls", function(req, res, next){
 })
 
 app.get("/urls", (req, res) => {
-  if (req.session.user_id) {
-  }
   const templateVars = {
-    urls: urlDatabase
+    urls: urlDatabase,
+    user: ""
   }
   if (req.session.user_id) {
     templateVars.user = users[req.session.user_id];
-  } else {
-    templateVars.user = "";
   }
   res.render("urls_index", templateVars);
 })
 
 
 app.get("/urls/new", (req, res) => {
-  const templateVars = { user: "" }
+  const templateVars = {
+    user: ""
+  }
   if (req.session.user_id) {
     templateVars.user = users[req.session.user_id];
   }
@@ -181,13 +178,13 @@ app.use("/urls/:shortURL", function(req, res, next){
 app.get("/urls/:shortURL", (req, res) => {
   const templateVars = {
     shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL].longURL
+    longURL: urlDatabase[req.params.shortURL].longURL,
+    user: ""
     }
     if (req.session.user_id) {
       templateVars.user = users[req.session.user_id];
       res.render("urls_show", templateVars);
     } else {
-      templateVars.user = "";
       res.render("urls_invalidUser", templateVars);
     }
 });
