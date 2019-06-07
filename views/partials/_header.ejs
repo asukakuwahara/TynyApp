@@ -5,6 +5,7 @@
     </header>
     <% if(user){ %>
     <p>Logged In As: <%= user.email %></p>
+    <a href="/urls" title="urls">Home</a><span> | </span>
     <a href="/urls/logout/" title="Logout">Logout</a>
 
     <%} else {%>

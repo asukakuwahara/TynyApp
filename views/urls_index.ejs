@@ -14,7 +14,7 @@
       <h1>My tiny URLs</h1>
       <% for (let url in urls) { %>
       <h3>
-        <li><%= url %> -  <%= urls[url].longURL %></li>
+        <li><a href="/u/<%= url%>/"><%= url %></a> for  <%= urls[url].longURL %></li>
       </h3>
       <form method="POST" action="/urls/<%= url %>/delete">
         <a href="/urls/<%= url %>/delete" title="Delete <%= url %>"><button type="submit">DELETE</button></a>
