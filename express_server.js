@@ -50,10 +50,23 @@ const urlsForUser = function(id){
 }
 
 app.use("/urls", function(req, res, next){
-  // console.log(urlsForUser(req.cookies["user_id"]))
   if(!urlsForUser(req.cookies["user_id"])){
      res.status(404).send('Login to gain access');
-   }
+  }
+  next()
+})
+
+app.use("/urls/:shortURL/delete", function(req, res, next){
+  if(!urlsForUser(req.cookies["user_id"])){
+     res.status(404).send('Login to gain access');
+  }
+  next()
+})
+
+app.use("/urls/:shortURL", function(req, res, next){
+  if(!urlsForUser(req.cookies["user_id"])){
+     res.status(404).send('Login to gain access');
+  }
   next()
 })
 
