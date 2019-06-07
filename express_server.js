@@ -58,7 +58,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 })
 
 app.post("/urls/login", (req, res) => {
-  const password = req.body.password;
+  const typedpassword = req.body.password;
   const email = req.body.email;
   if (!email){
      res.status(404);
@@ -67,11 +67,11 @@ app.post("/urls/login", (req, res) => {
   if (email && !emailLookup(email)){
     res.status(403).send('email does not match any account');
   }
-  if (email && emailLookup(email) && password !== users[emailLookup(email)].password){
+  if (email && emailLookup(email) && !bcrypt.compareSync(typedpassword, users[emailLookup(email)].password)){
      res.status(403).send('incorrect password');
   }
-  if (email && emailLookup(email) && password === users[emailLookup(email)].password){
-     res.session.user_id = emailLookup(email);
+  if (email && emailLookup(email) && bcrypt.compareSync(typedpassword, users[emailLookup(email)].password)){
+     req.session.user_id = emailLookup(email);
      res.redirect("/urls")
   }
 })
@@ -190,7 +190,19 @@ app.get("/urls/:shortURL", (req, res) => {
   }
 });
 
+app.use("/u/:shortURL", function(req, res, next){
+  if(!req.session.user_id){
+    const templateVars ={
+      user: ""
+    }
+    res.render("urls_invalidUser", templateVars)
+  }
+  next()
+})
 app.get("/u/:shortURL", (req, res) => {
+    // shortURL: req.params.shortURL,
+    // longURL: urlDatabase[req.params.shortURL].longURL
+  console.log(longURL)
   const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
 });
