@@ -76,7 +76,6 @@ app.post("/urls/login", (req, res) => {
   }
 })
 
-
 app.post("/urls/:shortURL", (req, res) => {
   urlDatabase[req.params.shortURL].longURL = req.body["longURL"]
   const templateVars = {
@@ -200,9 +199,6 @@ app.use("/u/:shortURL", function(req, res, next){
   next()
 })
 app.get("/u/:shortURL", (req, res) => {
-    // shortURL: req.params.shortURL,
-    // longURL: urlDatabase[req.params.shortURL].longURL
-  console.log(longURL)
   const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
 });
