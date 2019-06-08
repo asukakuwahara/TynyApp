@@ -11,16 +11,19 @@
 </head>
 <body style="font-size:20px; padding:50px;">
   <h2><a href='/urls/new/'>Create New Tiny URL</a></h2>
-      <h1>My tiny URLs</h1>
+    <h1>My tiny URLs</h1>
+      <% if(urls === {}){%>
+        <h3>Currently No URLs here</h3>
+      <% }  else {%>
       <% for (let url in urls) { %>
-      <h3>
-        <li><a href="/u/<%= url%>/"><%= url %></a> for  <%= urls[url].longURL %></li>
-      </h3>
-      <form method="POST" action="/urls/<%= url %>/delete">
-        <a href="/urls/<%= url %>/delete" title="Delete <%= url %>"><button type="submit">DELETE</button></a>
+        <h3>
+          <li><a href="/u/<%= url%>/"><%= url %></a> for  <%= urls[url].longURL %></li>
+        </h3>
+        <a href="/urls/<%= url %>/" title="Edit <%= url %>"><button button type="button submit" class="btn btn-info">EDIT</button></a>
+        <form method="POST" action="/urls/<%= url %>/delete">
+        <a href="/urls/<%= url %>/delete" title="Delete <%= url %>"><button type="button submit" class="btn btn-danger">DELETE</button></a>
       </form>
-        <a href="/urls/<%= url %>/" title="Edit <%= url %>"><button type="submit">EDIT</button></a>
-      <% } %>
+      <% } }%>
 
 
 </body>

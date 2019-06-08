@@ -24,9 +24,8 @@ const urlDatabase = {};
 app.post("/urls/register", (req, res) =>{
   const password = req.body.password;
   const hashedPassword = bcrypt.hashSync(password, 10);
-
   const email = req.body.email;
-  if (!email) {
+  if (!email || !password) {
      res.status(404).send('type something at least');
   }
   if (email && emailLookup(email)) {
@@ -170,7 +169,7 @@ app.get("/urls.json", (req, res) => {
 
 app.use("/urls/:shortURL", function(req, res, next){
   if (!urlsForUser(req.session.user_id)) {
-     res.status(404).send('Login to gain access');
+    res.status(404).send('Login to gain access');
   }
   next()
 })
