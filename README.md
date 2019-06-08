@@ -2,9 +2,6 @@
 
 A full stack web application built with Node and Express that allows users to shorten long URLs.
 
-## Final Product
-
-
 ## Dependencies
 
 - Node.js
@@ -19,4 +16,9 @@ A full stack web application built with Node and Express that allows users to sh
 - Install all dependencies (using the `npm install` command).
 - Run the development web server using the `node express_server.js` command.
 - Open http://localhost:8080 to view it on browser.
+
+## Final Product
+![createURLimage]/screenshots/LoginScreen.png
+![createURLimage]/screenshots/CreateURL.png
+![createURLimage]/screenshots/home.png
 
