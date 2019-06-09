@@ -112,6 +112,7 @@ app.post("/urls/:shortURL", (req, res) => {
 
 //GET endpoints
 
+//users without cookie will be redirected to login page
 app.get("/", (req, res) => {
   const templateVars = {
     urls: urlDatabase,
@@ -119,12 +120,7 @@ app.get("/", (req, res) => {
     longURL: urlDatabase[req.params.shortURL],
     user: ""
   }
-  if (req.session.user_id) {
-    templateVars.user = users[req.session.user_id];
-    res.render("urls_index", templateVars);
-  } else {
-    res.render("urls_invalidUser", templateVars);
-  }
+  res.redirect("/urls/login");
 })
 
 app.get("/urls/register", (req, res) => {
@@ -159,7 +155,7 @@ app.use("/urls", function(req, res, next){
     const templateVars ={
       user: ""
     }
-    res.render("urls_invalidUser", templateVars);
+    res.redirect("/urls/login");
   }
   next()
 })
@@ -207,7 +203,7 @@ app.get("/urls/:shortURL", (req, res) => {
       templateVars.user = users[req.session.user_id];
       res.render("urls_show", templateVars);
     } else {
-      res.render("urls_invalidUser", templateVars);
+      res.redirect("/urls/login");
     }
 });
 
@@ -216,7 +212,7 @@ app.use("/u/:shortURL", function(req, res, next){
     const templateVars ={
       user: ""
     }
-  res.render("urls_invalidUser", templateVars);
+    res.redirect("/urls/login");
   }
   next()
 })
