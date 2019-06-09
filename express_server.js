@@ -197,7 +197,6 @@ app.get("/urls/:shortURL", (req, res) => {
     user: users[req.session.user_id],
     error: ""
     }
-      // templateVars.user = users[req.session.user_id];
       res.render("urls_show", templateVars);
 });
 
