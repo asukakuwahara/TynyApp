@@ -18,6 +18,28 @@ app.set("view engine", "ejs");
 const users = {}
 const urlDatabase = {};
 
+
+//create random string for user id
+function generateRandomString() {
+  return Math.random().toString(36).substring(2, 8);
+}
+
+function emailLookup (email){
+  for (user in users) {
+    if (email === users[user].email) {
+      return user;
+    }
+  }
+}
+
+function urlsForUser (id){
+  for (url in urlDatabase) {
+    if (id === urlDatabase[url].userID) {
+      return urlDatabase[url].longURL;
+    }
+  }
+}
+
 //post endpoints
 
 //register page sets cookies
@@ -131,6 +153,7 @@ app.get("/urls/logout", (req, res) => {
   res.redirect("/urls");
 })
 
+
 app.use("/urls", function(req, res, next){
   if (!req.session.user_id) {
     const templateVars ={
@@ -205,31 +228,6 @@ app.get("/u/:shortURL", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 })
-
-//helper functions
-function generateRandomString() {
-  return Math.random().toString(36).substring(2, 8);
-}
-
-function getUserById (user_id) {
-  return users[user_id];
-}
-
-function emailLookup (email){
-  for (user in users) {
-    if (email === users[user].email) {
-      return user;
-    }
-  }
-}
-
-function urlsForUser (id){
-  for (url in urlDatabase) {
-    if (id === urlDatabase[url].userID) {
-      return urlDatabase[url].longURL;
-    }
-  }
-}
 
 
 
