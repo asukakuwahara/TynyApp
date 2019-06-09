@@ -12,7 +12,7 @@
 <body style="font-size:20px; padding:50px;">
   <h2><a href='/urls/new/'>Create New Tiny URL</a></h2>
   <h2>Tiny URL for <%= longURL %></h2>
-  <h3><a href="/u/<%= url%>/"><%= shortURL  %></a></h3>
+  <h3><a href="/u/<%= url%>/">http://localhost8080/u/<%= shortURL  %></a></h3>
   <form class="form-inline" method="POST" action="/urls/<%= shortURL %>" >
     <input class="form-control" type="text" name="longURL" placeholder="http://" style="width: 300px; margin: 1em">
       <button button type="button submit" class="btn btn-primary">UPDATE</button>
