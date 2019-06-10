@@ -21,7 +21,7 @@ const users = {}
 const urlDatabase = {};
 
 
-//create random string for user id
+//create random string for user id and short URLs
 function generateRandomString() {
   return Math.random().toString(36).substring(2, 8);
 }
@@ -73,6 +73,7 @@ app.post("/urls/new", (req, res) => {
   res.redirect(`/urls/${randomURL}`);
 });
 
+//stops non-owners from deleting URLs in the middleware
 app.use("/urls/:shortURL/delete", function(req, res, next){
   if (!urlsForUser(req.session.user_id)){
     res.status(404).send('Login to gain access');
@@ -85,6 +86,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   res.redirect("/urls");
 })
 
+//gives cookie with encrypted password to only successful users
 app.post("/urls/login", (req, res) => {
   const typedpassword = req.body.password;
   const email = req.body.email;
@@ -203,7 +205,7 @@ app.get("/urls/:shortURL", (req, res) => {
 
 app.use("/u/:shortURL", function(req, res, next){
   if (!req.session.user_id) {
-    const templateVars ={
+    const templateVars = {
       user: "",
       error: ""
     }
