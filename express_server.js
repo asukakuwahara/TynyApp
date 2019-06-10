@@ -111,7 +111,8 @@ app.post("/urls/:shortURL", (req, res) => {
   const templateVars = {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL].longURL,
-    user: users[req.session.user_id]
+    user: users[req.session.user_id],
+    error: ""
   }
   res.render("urls_show", templateVars);
 })
