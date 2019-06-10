@@ -122,6 +122,7 @@ app.get("/", (req, res) => {
   res.redirect("/urls/login");
 })
 
+//empty user/error key needed for ejs
 app.get("/urls/register", (req, res) => {
   const templateVars = {
     shortURL: req.params.shortURL,
@@ -181,10 +182,6 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new", templateVars);
 });
 
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
-})
-
 app.use("/urls/:shortURL", function(req, res, next){
   if (!urlsForUser(req.session.user_id)) {
     res.status(404).send('Login to gain access');
@@ -199,24 +196,17 @@ app.get("/urls/:shortURL", (req, res) => {
     user: users[req.session.user_id],
     error: ""
     }
-      // templateVars.user = users[req.session.user_id];
       res.render("urls_show", templateVars);
 });
 
-app.use("/u/:shortURL", function(req, res, next){
-  if (!req.session.user_id) {
-    const templateVars = {
-      user: "",
-      error: ""
-    }
-    res.redirect("/urls/login");
-  }
-  next()
-})
 app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
 });
+
+app.get("/urls.json", (req, res) => {
+  res.json(urlDatabase);
+})
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
