@@ -2,7 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser")
 const bcrypt = require('bcrypt');
-const cookieSession  = require('cookie-session')
+const cookieSession  = require('cookie-session');
+
+// Helper functions
+var helpers = require('./helpers.js');
 
 const app = express();
 const PORT = 8080;
@@ -20,28 +23,6 @@ app.set("view engine", "ejs");
 const users = {}
 const urlDatabase = {};
 
-
-//create random string for user id and short URLs
-function generateRandomString() {
-  return Math.random().toString(36).substring(2, 8);
-}
-
-function emailLookup (email){
-  for (user in users) {
-    if (email === users[user].email) {
-      return user;
-    }
-  }
-}
-
-function urlsForUser (id){
-  for (url in urlDatabase) {
-    if (id === urlDatabase[url].userID) {
-      return urlDatabase[url].longURL;
-    }
-  }
-}
-
 //post endpoints
 
 //register page sets cookie to a successful user
@@ -52,10 +33,10 @@ app.post("/urls/register", (req, res) =>{
   if (!email || !password) {
      res.status(404).send('type something at least');
   }
-  if (email && emailLookup(email)) {
+  if (email && helpers.emailLookup(email, users)) {
     res.status(404).send('email already registered');
-  } else if (email && !emailLookup(email)){
-    const newId = generateRandomString();
+  } else if (email && !helpers.emailLookup(email, users)){
+    const newId = helpers.generateRandomString();
     users[newId] = {
       id: newId,
       email: email,
@@ -68,14 +49,14 @@ app.post("/urls/register", (req, res) =>{
 })
 
 app.post("/urls/new", (req, res) => {
-  const randomURL = generateRandomString();
+  const randomURL = helpers.generateRandomString();
   urlDatabase[randomURL] = {longURL: req.body["longURL"], userID: req.session.user_id};
   res.redirect(`/urls/${randomURL}`);
 });
 
 //stops non-owners from deleting URLs in the middleware
 app.use("/urls/:shortURL/delete", function(req, res, next){
-  if (!urlsForUser(req.session.user_id)){
+  if (!helpers.urlsForUser(req.session.user_id, urlDatabase)){
     res.status(404).send('Login to gain access');
   }
   next();
@@ -93,15 +74,15 @@ app.post("/urls/login", (req, res) => {
   if (!email){
     res.status(403).send('Type something at least!');
   }
-  if (email && !emailLookup(email)){
+  if (email && !helpers.emailLookup(email, users)){
     res.status(403).send('email does not match any account');
   }
-  if (email && emailLookup(email) && !bcrypt.compareSync(typedpassword, users[emailLookup(email)].password)){
+  if (email && helpers.emailLookup(email, users) && !bcrypt.compareSync(typedpassword, users[helpers.emailLookup(email, users)].password)){
     res.status(403).send('incorrect password');
   }
-  if (email && emailLookup(email) && bcrypt.compareSync(typedpassword, users[emailLookup(email)].password)){
+  if (email && helpers.emailLookup(email, users) && bcrypt.compareSync(typedpassword, users[helpers.emailLookup(email, users)].password)){
     res.clearCookie("error", req.cookies.error);
-    req.session.user_id = emailLookup(email);
+    req.session.user_id = helpers.emailLookup(email, users);
     res.redirect("/urls");
   }
 })
@@ -183,7 +164,7 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.use("/urls/:shortURL", function(req, res, next){
-  if (!urlsForUser(req.session.user_id)) {
+  if (!helpers.urlsForUser(req.session.user_id, urlDatabase)) {
     res.status(404).send('Login to gain access');
   }
   next()
