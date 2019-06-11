@@ -32,8 +32,7 @@ app.post("/urls/register", (req, res) =>{
   const email = req.body.email;
   if (!email || !password) {
      res.status(404).send('type something at least');
-  }
-  if (email && helpers.emailLookup(email, users)) {
+  } else if (email && helpers.emailLookup(email, users)) {
     res.status(404).send('email already registered');
   } else if (email && !helpers.emailLookup(email, users)){
     const newId = helpers.generateRandomString();
