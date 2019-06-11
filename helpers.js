@@ -14,9 +14,9 @@ emailLookup: function(email, users){
 },
 
 urlsForUser: function(id, data){
-  for (url in urlDatabase) {
-    if (id === urlDatabase[url].userID) {
-      return urlDatabase[url].longURL;
+  for (url in data) {
+    if (id === data[url].userID) {
+      return data[url].longURL;
     }
   }
 }
